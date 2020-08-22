@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+		  <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <title> title </title>
+
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.back{
+    position:absolute; 
+    
+    background-image: linear-gradient(to right, DarkGray, Azure);
+	width:1348px;
+    margin-top:1px;
+	
+	
+	}
+	
+
+.div1{
+
+  list-style-type: none;
+  margin-top:0px;
+  color:white;
+  height:140px;
+  overflow: hidden;
+  background-color: #34495E;
+  padding:20px;
+}
+.div1 h1{
+       text-align:center;
+	   margin-top:30px;
+	   
+
+}
+.graph{
+margin-left:25%;
+}
+.wrapper {
+    text-align: center;
+}
+
+.button {
+    position: absolute;
+    top: 50%;
+}
+.percent {
+	text-align:center;
+	align:center;
+  background-color: #34495E;
+  width: 50%;
+  color: white;
+  border: 15px #34495E;
+  padding: 50px;
+  margin: auto;
+}
+	
+.footer {
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: #34495E;
+   color: white;
+   text-align: center;
+}
+.pie{
+margin-left:25%;
+}
+</style>
+    </head>
+    <body>
+      <div  class="div1"><h1>STOCK PREDICTOR</h1> </div>
+	  <div class="back">
+			<h2>{{ title|title }} of {{ name }}</h2>
+		    <div class='info'>
+
+         <p> <img src="{{url_for('static',filename='yesbnk.jpg')}} "style="float:left;width:200px;height:183px;margin-left:10px;"><h3>TATA Consultancy Services Limited is an Indain multinational information technology services and consulting company headquartered in &nbsp;&nbsp;Mumbai,Maharashtra,India.
+        It is a subsidiary of Tata Group and operates in 149 locations across 46 countries.
+           <ul>
+           <li>Headquarters :Mumbai</li>
+      	   <li>Founder(s): [],Tata Sons</li>
+           <li>Founded: 1968</li>
+           <li>Employees: 446,675</li>
+		   <li>Parent Organization: Tata Capital</li>
+		   </ul></h3>
+		 <p><br>
+		<div class = "pie"> 
+	 <canvas id="chart" width="600" height="400"></canvas>
+</div>
+&ensp;
+	 <div class="percent">
+	 <h2> Positive tweets: {{ posper }}% </h2>
+	 <h2> Negative tweets: {{ negper }}% </h2>
+	 <h3> This company is good for Stocks at this Moment</h3>
+	 </div>
+	 
+&ensp;
+		<div class="graph">
+        <h2>{{ c|safe }}	  </h2>  
+</div>		
+&ensp;
+		<div class = "percent">
+		<h2>Accuracy of our Model is around {{ result }}%</h2>
+		</div>
+		&ensp;
+		<div class="wrapper">
+		<button id="myBtn">Predict closing price</button>
+		</div>
+		&ensp;
+		<div class="footer">
+		
+  <p>Footer</p>
+</div>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Todays closing price would be {{ pricess }}</h2>
+	<h2> {{ change }} </h2>
+  </div>
+
+</div>
+        
+</div>
+    <script>
+      var pieData = [
+        {% for item, label, colors in set %}
+          {
+            value: {{item}},
+            label: "{{label}}",
+            color : "{{colors}}"
+          },
+        {% endfor %}
+      ];
+
+      // get bar chart canvas
+      var mychart = document.getElementById("chart").getContext("2d");
+      steps = 10
+      max = {{ max }}
+
+      // draw pie chart
+      new Chart(document.getElementById("chart").getContext("2d")).Pie(pieData);
+
+    </script>
+<!-- The Modal -->
+
+
+<script>
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
+    	
+    </body>
+</html>
